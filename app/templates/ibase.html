@@ -1,0 +1,91 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}渔业资源管理系统{% endblock %}
+{% block styles %}
+    {{ super() }}
+    <link href="../static/css/ibase.css" rel="stylesheet" type="text/css"/>
+    <style>
+        .navbar-nav > li > a {
+            color: #ffffff !important;
+            font-family: 黑体;
+            font-size: 16px
+        }
+
+        .navbar-nav > .open > a {
+            background-color: transparent !important;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div id="rootContainer">
+        {% block navbar %}
+            <nav class="navbar navbar-default" style="height:100px;margin-bottom:0px;background:#2899da">
+                <div class="container-fluid" style="position:absolute;bottom:0px">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div id="nav_icon" style="width:100px;height:100px;float:left;display:none">
+                        <img style="width:100px;height:100px" src="../static/images/fish.png">
+                    </div>
+                    <div id="nav_info" style="height:100px;float:left">
+                        <div id="nav_app_name" style="height:50px">
+                            <h3 style="color:white;padding-top:10px;margin:0px;margin-left:10px">{{ title }}渔业资源管理系统</h3>
+                        </div>
+                        <div id="nav_nav_item">
+                            <span id="line" style="position:absolute;height:3px;background:#ffffff;bottom:2px"></span>
+                            <!-- Collect the nav links, forms, and other content for toggling -->
+                            <div class="collapse navbar-collapse" style="padding-left:0px"
+                                 id="bs-example-navbar-collapse-1">
+                                <ul class="nav navbar-nav">
+                                    <li class="dropdown">
+                                        <a id="currentQueryCondition" href="#" class="dropdown-toggle nav_font"
+                                           data-toggle="dropdown" role="button" aria-haspopup="true"
+                                           aria-expanded="false">渔业信息查询 <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a id="clickQuery" href="#">选择查询</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li><a id="nameQuery" href="#">鱼塘主体检索</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li><a id="areaQuery" href="#">鱼塘面积检索</a></li>
+                                            <!--  <li role="separator" class="divider"></li>
+                                             <li><a  id ="multiQuery" href="#">多重条件检索</a></li> -->
+                                        </ul>
+                                    </li>
+                                    <!--class="active"-->
+                                    <li><a id="createNewItem" class="nav_font" href="#">信息入库</a></li>
+                                    <li><a id="modifyItem" href="#">信息更新</a></li>
+                                    <li><a id="infoStatistics" href="#" class="dropdown-toggle nav_font"
+                                           data-toggle="dropdown" role="button" aria-haspopup="true"
+                                           aria-expanded="false">信息统计<span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a id="statistic_county" href="#">全县渔业统计</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li><a id="statistic_town" href="#">各镇渔业统计</a></li>
+                                        </ul>
+                                    </li>
+                                    <!-- <li><a id="fishEnv" href="#">渔业环境监测</a></li> -->
+                                </ul>
+                            </div><!-- /.navbar-collapse -->
+                        </div>
+
+                    </div>
+
+
+                </div><!-- /.container-fluid -->
+                <span style="float:right;color:#FFFFFF;margin-top:5px;margin-right:15px">嘉善县渔业局</span>
+            </nav>
+        {% endblock %}
+        {% block content %}
+            <div id="rootContainer">
+                {% block icontent %}
+                {% endblock %}
+            </div>
+        {% endblock %}
+
+        {% block scripts %}
+            {{ super() }}
+            <script src="../static/js/jsons.js"></script>
+            <script src="../static/js/echarts.js"></script>
+            <script src="../static/js/ol.js"></script>
+            <script src="../static/js/ibase.js"></script>
+            <script src="../static/js/statistics.js" charset="UTF-8"></script>
+        {% endblock %}
+    </div>
+{% endblock %}

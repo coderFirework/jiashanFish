@@ -1,0 +1,173 @@
+{% extends "ibase.html" %}
+{% block styles %}
+{{ super() }}
+<link href="../static/css/ol.css" rel="stylesheet" type="text/css"/>
+<style>
+    .ol-popup {
+        position: absolute;
+        background-color: white;
+        -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+        filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #cccccc;
+        bottom: 12px;
+        left: -50px;
+        min-width: 280px;
+    }
+
+    .ol-popup:after, .ol-popup:before {
+        top: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .ol-popup:after {
+        border-top-color: white;
+        border-width: 10px;
+        left: 48px;
+        margin-left: -10px;
+    }
+
+    .ol-popup:before {
+        border-top-color: #cccccc;
+        border-width: 11px;
+        left: 48px;
+        margin-left: -11px;
+    }
+
+    .ol-popup-closer {
+        text-decoration: none;
+        position: absolute;
+        top: 2px;
+        right: 8px;
+    }
+
+    .ol-popup-closer:after {
+        content: "✖";
+    }
+
+    .popover-content {
+        min-width: 180px;
+    }
+
+    div.ol-zoom {
+        /*隐藏地图左上角的+-号*/
+        display: none;
+    }
+
+    div.ol-attribution {
+        /*隐藏i*/
+        display: none;
+    }
+</style>
+{% endblock %}
+{% block icontent %}
+<div id="mapArea" style="float:left">
+    <div id="processing" class="bg-danger" style="position:absolute;top:110px;left:100px;z-index: 100">正在进行....</div>
+    <div id="map" class="map"></div>
+    <!-- Popup -->
+    <div id="popup" class="ol-popup">
+        <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+        <div id="popup-content"></div>
+    </div>
+</div>
+<div id="propertyArea">
+    <div class="panel panel-default" style="margin:10px">
+        <div class="panel-heading">
+            <h3 class="panel-title"><span>属性信息</span></h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered" id="propertyTable">
+                <tr>
+                    <td>1</td>
+                    <td>杨巧根</td>
+                    <td>河蟹</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>吴文海</td>
+                    <td>鱼塘</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>谢善明</td>
+                    <td>虾塘</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>唐水良</td>
+                    <td>围养</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div id="tips" class="panel panel-default"
+     style="position:absolute;margin-left:20px;margin-top:25px;width:40px;height:40px;text-align:center;vertical-align:middle">
+    <img src="../static/images/open.png" style="width:20px;height:20px;margin-top:8px">
+</div>
+
+<div class="panel panel-default" id="searchContainer"
+     style="position:absolute;margin-left:20px;margin-top:25px;width:200px;height:auto;display:none">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span id="search_title_caption">检索</span>
+            <img id="search_title_icon" src="../static/images/close.png" style="width:20px;height:20px;float:right">
+        </h3>
+    </div>
+    <div class="panel-body" id="searchContent">
+        <div id="nameQueryBlock" class="form-group">
+            <label for="nameInput">养殖户姓名</label>
+            <input type="text" class="form-control" id="nameInput" placeholder="">
+        </div>
+        <div id="areaQueryBlock" class="form-group">
+            <label for="minValue">水面面积<span style="color:#ff0000">(亩)</span></label>
+            <input type="text" class="form-control" id="minValue" value="0" placeholder="">
+            < 面积 <=
+            <input type="text" class="form-control" id="maxValue" value="0" placeholder="">
+        </div>
+        <!--
+        <div id="mutiQueryBlock" class="form-group">
+            <label for="minValue">划分类型</label>
+            <div class="btn-group">
+                <button id="defaultTypeBt" type="button" class="btn btn-primary" onclick="getSelectType(this)">鱼塘
+                </button>
+                <button type="button" class="btn btn-default" onclick="getSelectType(this)">外荡</button>
+                <button type="button" class="btn btn-default" onclick="getSelectType(this)">围养</button>
+                <button type="button" class="btn btn-default" onclick="getSelectType(this)">其他</button>
+            </div>
+        </div>
+        -->
+        <button id="nameQueryBT" type="submit" class="btn btn-default" style="float:right">检索</button>
+    </div>
+</div>
+<!-- modal dialog -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="modal_title">数据加载</h4>
+      </div>
+        <div class="modal-body">
+        <p class="bg-warning" id="modal_text">proceeding...</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="../static/js/ol.js"></script>
+<script src="../static/js/main/main.js"></script>
+{% endblock %}
